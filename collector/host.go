@@ -153,7 +153,7 @@ func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 		}
 		{
 			g := e.MemoryCapacity.WithLabelValues(s.Name)
-			g.Set(float64(s.MemoryCapacity))
+			g.Set(int(s.MemoryCapacity))
 			log.Printf("URL: %d", s.MemoryCapacity)
 			g.Collect(ch)
 		}
