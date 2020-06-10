@@ -13,8 +13,8 @@ import (
 	"flag"
 	"net/http"
 
-	"github.com/claranet/nutanix-exporter/collector"
-	"github.com/claranet/nutanix-exporter/nutanix"
+	"github.com/rakeshnetsil/nutanix-exporter/collector"
+	"github.com/rakeshnetsil/nutanix-exporter/nutanix"
 
 	//	"time"
 	//	"regexp"
