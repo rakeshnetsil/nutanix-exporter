@@ -120,13 +120,17 @@ var hostUsageStats map[string]string = map[string]string{
 type HostExporter struct {
 	NumVms         *prometheus.GaugeVec
 	MemoryCapacity *prometheus.GaugeVec
+	CpuCapacity    *prometheus.GaugeVec
+	CpuFrequency   *prometheus.GaugeVec
 	Stats          map[string]*prometheus.GaugeVec
 	UsageStats     map[string]*prometheus.GaugeVec
 }
 
 func (e *HostExporter) Describe(ch chan<- *prometheus.Desc) {
 	e.NumVms = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "count_vms", Help: "Count vms on each host"}, hostLabels)
-	e.MemoryCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "memory_capacity_in_bytes", Help: "Tottal memory capacity on each host"}, hostLabels)
+	e.MemoryCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "memory_capacity_in_bytes", Help: "Total memory capacity on each host"}, hostLabels)
+	e.CpuCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "cpu_capacity_in_hz", Help: "Total cpu capacity on each host"}, hostLabels)
+	e.CpuFrequency = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "cpu_frequency_in_hz", Help: "Total cpu frequency on each host"}, hostLabels)
 	e.Stats = make(map[string]*prometheus.GaugeVec)
 	for k, h := range hostStats {
 		name := normalizeFQN(k)
@@ -153,6 +157,16 @@ func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 		{
 			g := e.MemoryCapacity.WithLabelValues(s.Name)
 			g.Set(float64(s.MemoryCapacity))
+			g.Collect(ch)
+		}
+		{
+			g := e.CpuCapacity.WithLabelValues(s.Name)
+			g.Set(float64(s.CpuCapacity))
+			g.Collect(ch)
+		}
+		{
+			g := e.CpuFrequency.WithLabelValues(s.Name)
+			g.Set(float64(s.CpuFrequency))
 			g.Collect(ch)
 		}
 		for i, k := range e.UsageStats {
