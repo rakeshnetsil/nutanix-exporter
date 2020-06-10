@@ -2,7 +2,6 @@ package collector
 
 //import "encoding/json"
 import (
-	"log"
 	"strconv"
 
 	"github.com/rakeshnetsil/nutanix-exporter/nutanix"
@@ -127,7 +126,7 @@ type HostExporter struct {
 
 func (e *HostExporter) Describe(ch chan<- *prometheus.Desc) {
 	e.NumVms = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "count_vms", Help: "Count vms on each host"}, hostLabels)
-	e.MemoryCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "memory_capacity", Help: "Tottal memory capacity on each host"}, hostLabels)
+	e.MemoryCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{Namespace: hostNamespace, Name: "memory_capacity_in_bytes", Help: "Tottal memory capacity on each host"}, hostLabels)
 	e.Stats = make(map[string]*prometheus.GaugeVec)
 	for k, h := range hostStats {
 		name := normalizeFQN(k)
@@ -154,7 +153,6 @@ func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 		{
 			g := e.MemoryCapacity.WithLabelValues(s.Name)
 			g.Set(float64(s.MemoryCapacity))
-			log.Printf("URL: %d", s.MemoryCapacity)
 			g.Collect(ch)
 		}
 		for i, k := range e.UsageStats {
