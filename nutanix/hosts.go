@@ -21,7 +21,7 @@ type HostEntity struct {
 	NumVms         int     `json:"num_vms"`
 	BootTime       float64 `json:"boot_time_in_usecs"`
 	Stats          map[string]string
-	UsageStats     map[string]string
+	UsageStats     map[string]string `json:"usage_stats"`
 }
 
 func (n *Nutanix) GetHosts() []HostEntity {
