@@ -22,5 +22,6 @@ WORKDIR /
 COPY --from=builder /go/src/nutanix-exporter/nutanix-exporter .
 COPY . .
 EXPOSE 9404
+RUN chmod +x /nutanix-exporter
 CMD ["-nutanix.conf", "/config/config.yml"]
 ENTRYPOINT ["/nutanix-exporter"]
